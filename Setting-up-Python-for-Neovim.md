@@ -48,7 +48,7 @@ Python version greater than 3.1 should work.
 If you do light Python development, or the extent of your Python use is limited
 to Neovim, the basic installation instructions will be sufficient.
 
-`:h nvim-python` suggests the use of `sudo pip install neovim` for
+`:help python-provider` suggests the use of `sudo pip install neovim` for
 system-wide availability.  It's an acceptable solution if you are certain that
 your Python environment will be unaffected.  Read the following section before
 you consider using `sudo`: [Why you shouldn't use sudo](#why-you-shouldnt-use-sudo)
