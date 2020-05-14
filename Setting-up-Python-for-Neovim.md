@@ -1,7 +1,7 @@
 # Setting up Python for Neovim
 
 Neovim requires a package to be installed for Python plugins to work.  You
-*really* should read `:h nvim-python` to supplement the info on this page.
+*really* should read `:help provider-python` to supplement the info on this page.
 
 ## Table of Contents
 
