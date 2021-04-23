@@ -9,7 +9,10 @@ Neovim requires a package to be installed for Python plugins to work.  You
 * [Requirements](#requirements)
 * [Simple Setup](#simple-setup)
 * [Using Virtual Environments](#using-virtual-environments)
-* [Tips for using pyenv](#tips-for-using-pyenv)
+* [Pyenv](#pyenv)
+    * [Tips using pyenv](#pyenv---tips)
+* [venv](#virtualenv)
+    * [Tips using venv](#venv---tips)
 * [Why you shouldn't use sudo](#why-you-shouldnt-use-sudo)
 
 ## A brief overview of Neovim + Python
@@ -36,7 +39,7 @@ re-compiling Vim.
 ## Requirements
 
 Each Python interpreter that is used with Neovim will require the
-[neovim][python-client] package.
+[pynvim][python-client] package.
 
 `deoplete.nvim` requires Python 3 to be installed.  By extension,
 `deoplete-jedi` does, too.  It is recommended that Python 3.3+ is used, but any
@@ -48,49 +51,48 @@ Python version greater than 3.1 should work.
 If you do light Python development, or the extent of your Python use is limited
 to Neovim, the basic installation instructions will be sufficient.
 
-`:help python-provider` suggests the use of `sudo pip install neovim` for
-system-wide availability.  It's an acceptable solution if you are certain that
-your Python environment will be unaffected.  Read the following section before
-you consider using `sudo`: [Why you shouldn't use sudo](#why-you-shouldnt-use-sudo)
-
-It is recommended to use the `--user` flag when installing the `neovim`
-package:
+It is recommended to use the flags `--user` and `--upgrade` when installing the
+`pynvim` package (see also `help provider-python`):
 
 ```shell
-pip2 install --user neovim
-pip3 install --user neovim
+python3 -m pip install --user --upgrade pynvim
 ```
 
-The `--user` flag installs `neovim` in a directory within your home directory.
+The `--user` flag installs `pynvim` in a directory within your home directory.
 The limitation with this is that every user account on the system will need to
 perform this step.  You can confirm the location and that your environment
-permits user packages by running: `python -m site`
+permits user packages by running: `python -m site`.  
+The `--upgrade` flag ensures that you get the latest version even if a previous
+version was already installed.
+
+Pip will take care of installing any dependencies of the [pynvim][python-client]
+package.
 
 
 ## Using Virtual Environments
 
-If you do heavy Python development, you will most likely prefer using a virtual
-environment.  `deoplete-jedi` will display completions for your current shell's
-Python interpreter (run: `which python` to determine this).  This includes the
-Python interpreter that are made active using a virtualenv.
+If you do heavy Python development, you're most likely familiar with using a 
+virtual environment.  `deoplete-jedi` will display completions for your current
+shell's Python interpreter (run `which python` to determine this).  This 
+includes the Python interpreter that is made active using a virtualenv.
 
 If you are already using virtualenv for all of your work, it is recommended
-that you use separate virtual environments for Neovim, and only Neovim.  This
-will remove the need to install the `neovim` package in each virtual
-environment.  The following examples uses [pyenv][].  There are
-[tips](#tips-for-using-pyenv) below for installing and using `pyenv` without
-much effort.  `TODO: add instructions for pyvenv and virtualenv`
+that you use a separate virtual environment for Neovim, and only Neovim. This
+will remove the need to install the `pynvim` package in each virtual
+environment.  
+Below are instructions on installing & configuring [pyenv](#pyenv) (for Python 
+version management) or [venv](#venv) (for virtual environments).
+
+
+## Pyenv
+
+The following example uses `pyenv`.  There are [tips](#pyenv---tips)
+below for installing and using `pyenv` without much effort.  
 
 ```shell
-pyenv install 2.7.11
 pyenv install 3.4.4
 
-pyenv virtualenv 2.7.11 neovim2
 pyenv virtualenv 3.4.4 neovim3
-
-pyenv activate neovim2
-pip install neovim
-pyenv which python  # Note the path
 
 pyenv activate neovim3
 pip install neovim
@@ -108,11 +110,10 @@ Now that you've noted the interpreter paths, add the following to your
 `init.vim` file:
 
 ```vim
-let g:python_host_prog = '/full/path/to/neovim2/bin/python'
 let g:python3_host_prog = '/full/path/to/neovim3/bin/python'
 ```
 
-## Tips for using pyenv
+### Pyenv - tips
 
 - [Ensure you have the prerequisites installed][pyenv-prereq].
 - Installing pyenv with homebrew is unreliable.  Use [pyenv-installer][]
@@ -140,6 +141,27 @@ let g:python3_host_prog = '/full/path/to/neovim3/bin/python'
   `$PATH`.  Virtual environment names are listed as versions.
 
 
+## venv
+
+The following example uses the `venv` command to create a virtual environment. 
+See [tips](#venv---tips) below for further info.
+
+```shell
+python3 -m pip install venv
+python3 -m venv ~/.config/nvim/python-env     # for example
+```
+
+Then add the following line to your `init.vim`:
+```vim
+let g:python3_host_prog = '/home/$USER/.config/nvim/python-env/bin/python3'
+```
+
+### venv - tips
+- `source bin/activate` from the install location of the virtual environment, 
+then run `which python3` to confirm the binary being used
+- In Neovim run `:checkhealth` to confirm it sees the same binary
+
+
 ## Why you shouldn't use sudo
 
 Unless you know what you're doing, the system installed Python interpreters
@@ -163,9 +185,10 @@ system bin directories to be broken.
 
 If you can't honestly say that you know how Python packages are laid out or
 what your system's Python dependencies are, and enjoy having a stable,
-error-free Python installation, leave the system Python installations alone.
+error-free Python installation, leave the system Python installations alone. 
+[You don't want to end up like Randall](https://xkcd.com/1987/).
 
-[python-client]: https://pypi.python.org/pypi/neovim
+[python-client]: https://pypi.org/project/pynvim/
 [pyenv]: https://github.com/yyuu/pyenv
 [pyenv-prereq]: https://github.com/yyuu/pyenv/wiki/Common-build-problems
 [pyenv-installer]: https://github.com/yyuu/pyenv-installer
